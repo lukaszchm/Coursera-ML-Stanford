@@ -15,10 +15,10 @@ function plotData(x, y)
 %       markers larger by using plot(..., 'rx', 'MarkerSize', 10);
 
 figure; % open a new figure window
-
-
-
-
+plot(x, y, 'xr', 'MarkerSize', 10);
+title('Town population to revenue relation');
+xlabel('Population of City in 10,000s');
+ylabel('Profit in $10,000s');
 
 
 % ============================================================
