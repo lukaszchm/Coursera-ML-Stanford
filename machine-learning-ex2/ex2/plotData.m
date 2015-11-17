@@ -11,8 +11,8 @@ figure; hold on;
 %               2D plot, using the option 'k+' for the positive
 %               examples and 'ko' for the negative examples.
 %
-x1 = X(:, 2);
-x2 = X(:, 3);
+x1 = X(:, size(X, 2) - 1);
+x2 = X(:, size(X, 2));
 plot(x1(y == 1), x2(y == 1), 'k+', 'MarkerSize', 7, 'LineWidth', 2);
 plot(x1(y == 0), x2(y == 0), 'ro', 'MarkerSize', 7, 'MarkerFaceColor', 'y');
 % =========================================================================
