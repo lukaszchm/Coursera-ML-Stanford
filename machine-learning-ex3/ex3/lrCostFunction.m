@@ -11,7 +11,14 @@ m = length(y); % number of training examples
 % You need to return the following variables correctly 
 J = 0;
 grad = zeros(size(theta));
-
+Z = X*theta;
+H = 1./(1 + exp(-Z));
+errors = H - y;
+J = (sum(-y.*log(H) - (1 - y).*log(1-H)) + ...
+        lambda*sum(theta(2:end).^2)/2 ...
+    )/m;
+grad = (X'*errors)/m + lambda*theta/m;
+grad(1) = (X(:,1)'*errors)/m;
 % ====================== YOUR CODE HERE ======================
 % Instructions: Compute the cost of a particular choice of theta.
 %               You should set J to the cost.
