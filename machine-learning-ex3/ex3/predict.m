@@ -20,13 +20,17 @@ p = zeros(size(X, 1), 1);
 %       information see 'help max'. If your examples are in rows, then, you
 %       can use max(A, [], 2) to obtain the max for each row.
 %
+all_theta = cell(1, 2);
+all_theta{1} = Theta1;
+all_theta{2} = Theta2;
+z = X;
+for i=1:size(all_theta, 2)
+    theta = all_theta{i};
+    z = [ones(size(X, 1), 1) z];
+    z = 1./(1+exp(-z*theta'));
+end;
 
-
-
-
-
-
-
+[~, p] = max(z, [], 2);
 
 
 % =========================================================================
