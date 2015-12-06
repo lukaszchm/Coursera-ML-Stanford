@@ -39,29 +39,41 @@ Theta2_grad = zeros(size(Theta2));
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
 allThetas = {Theta1, Theta2};
-numberOfLayers = length(allThetas);
+numberOfLayers = length(allThetas) + 1;
 labels = eye(num_labels);
-z = X;
-for layer = 1:numberOfLayers
-    z = [ones(size(z, 1), 1) z];
-    z = z * allThetas{layer}';
-    a = 1 ./ (1 + exp(-z));
-    z = a;
+
+a = cell(numberOfLayers, 1);
+z = cell(numberOfLayers, 1);
+z{1} = X;
+a{1} = z{1};
+for layer = 2:numberOfLayers
+    a{layer-1} = [ones(m, 1) a{layer-1}];
+    z{layer} = a{layer-1} * allThetas{layer-1}';
+    a{layer} = 1 ./ (1 + exp(-z{layer}));
 end;
 
 for i = 1:m
     currentY = labels(y(i),:);
-    currentX = a(i, :);
+    currentX = a{3}(i, :);
     J = J + sum(-currentY.*log(currentX) - (1 - currentY).*log(1 - currentX));
 end;
 J = J/m;
 
-regularization = 0;
-for layer = 1:numberOfLayers
-    thetaSq = allThetas{layer}(:, 2:end).^2;
-    regularization = regularization + sum(thetaSq(:));
-end;
-J = J + regularization*lambda / (2*m); 
+delta = cell(3, 1);
+Delta = cell(2, 1);
+
+delta{3} = zeros(m, size(z{3}, 2));
+for i = 1:m
+   delta{3}(i, :) = a{3}(i, :) - labels(y(i), :); 
+end
+
+delta{2} = zeros(m, size(z{2}, 2));
+delta{2} = delta{3} * Theta2(:, 2:end) .* sigmoidGradient(z{2});
+
+Delta{1} = delta{2}' * a{1};
+Delta{2} = delta{3}' * a{2};
+Theta1_grad = Delta{1}/m;
+Theta2_grad = Delta{2}/m;
 
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
@@ -87,7 +99,12 @@ J = J + regularization*lambda / (2*m);
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
-
+regularization = 0;
+for layer = 1:numberOfLayers-1
+    thetaSq = allThetas{layer}(:, 2:end).^2;
+    regularization = regularization + sum(thetaSq(:));
+end;
+J = J + regularization*lambda / (2*m); 
 
 
 
