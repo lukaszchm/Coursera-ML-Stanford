@@ -72,8 +72,13 @@ delta{2} = delta{3} * Theta2(:, 2:end) .* sigmoidGradient(z{2});
 
 Delta{1} = delta{2}' * a{1};
 Delta{2} = delta{3}' * a{2};
-Theta1_grad = Delta{1}/m;
-Theta2_grad = Delta{2}/m;
+
+RegTerms = cell(2, 1);
+RegTerms{1} = [zeros(size(Theta1) .^ [1 0]), ones(size(Theta1)-[0 1])] .* Theta1 * lambda;
+RegTerms{2} = [zeros(size(Theta2) .^ [1 0]), ones(size(Theta2)-[0 1])] .* Theta2 * lambda;
+
+Theta1_grad = (Delta{1} + RegTerms{1})/m;
+Theta2_grad = (Delta{2} + RegTerms{2})/m;
 
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
