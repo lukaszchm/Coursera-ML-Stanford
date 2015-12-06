@@ -56,6 +56,13 @@ for i = 1:m
 end;
 J = J/m;
 
+regularization = 0;
+for layer = 1:numberOfLayers
+    thetaSq = allThetas{layer}.^2;
+    regularization = regularization + sum(thetaSq(:));
+end;
+J = J + regularization*lambda / (2*m); 
+
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
 %         the cost function with respect to Theta1 and Theta2 in Theta1_grad and
@@ -71,6 +78,8 @@ J = J/m;
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
