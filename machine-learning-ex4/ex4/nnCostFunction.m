@@ -58,7 +58,7 @@ J = J/m;
 
 regularization = 0;
 for layer = 1:numberOfLayers
-    thetaSq = allThetas{layer}.^2;
+    thetaSq = allThetas{layer}(:, 2:end).^2;
     regularization = regularization + sum(thetaSq(:));
 end;
 J = J + regularization*lambda / (2*m); 
